@@ -162,6 +162,9 @@ python -m mlx_vlm.convert --hf-path <local_dir> --mlx-path <mlx_dir>
     if model_type == "phi3_v":
         config["vision_config"] = config["img_processor"]
         config["text_config"] = {}
+    if model_type == "minicpmv":
+        config["text_config"] = {}
+        config["perceiver_config"] = {}
 
     model_config = model_class.ModelConfig.from_dict(config)
 
@@ -285,6 +288,7 @@ def load_image_processor(model_path: Union[str, Path]) -> BaseImageProcessor:
 def load_processor(
     model_path, processor_config={"trust_remote_code": True}
 ) -> Union[PreTrainedTokenizer, PreTrainedTokenizerFast]:
+    model_path = get_model_path("mlx-community/idefics2-8b-4bit")
     processor = AutoProcessor.from_pretrained(model_path, **processor_config)
     detokenizer_class = load_tokenizer(model_path, return_tokenizer=False)
     if "tokenizer" in processor.__dict__.keys():

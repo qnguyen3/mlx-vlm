@@ -11,7 +11,7 @@ def get_message_json(model_name, prompt):
     Returns:
         dict: A dictionary representing the JSON message for the specified model.
     """
-    if model_name.lower() == "idefics2":
+    if model_name.lower() in ["idefics2", "minicpmv"]:
         message = {
             "role": "user",
             "content": [{"type": "image"}, {"type": "text", "text": prompt}],
