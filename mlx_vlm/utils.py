@@ -158,8 +158,11 @@ python -m mlx_vlm.convert --hf-path <local_dir> --mlx-path <mlx_dir>
             **config.get("vision_config", {}),
         }
         config["text_config"] = text_config
-    if model_type == "idefics2":
+    if model_type in ["idefics2", "idefics3"]:
         config = AutoConfig.from_pretrained(model_path).to_dict()
+        if model_type == "idefics3":
+            config["perceiver_config"] = config["text_config"]["perceiver_config"]
+
     if model_type == "phi3_v":
         config["vision_config"] = config["img_processor"]
         config["text_config"] = {}
@@ -206,7 +209,7 @@ python -m mlx_vlm.convert --hf-path <local_dir> --mlx-path <mlx_dir>
             **quantization,
             class_predicate=class_predicate,
         )
-
+    print(config["text_config"])
     model.load_weights(list(weights.items()))
     if not lazy:
         mx.eval(model.parameters())
